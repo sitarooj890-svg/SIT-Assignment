@@ -2,19 +2,18 @@
 
 All four tools were tested on the same demo codebase (a small Python calculator library) using the same sequence of tasks: Understand → Instruct (AGENTS.md compliance) → Change (add one function) → Debug/Verify → Git commit.
 
-Summary Table
+## Summary Table
 
-| Aspect | OpenCode | Pi Coding Agent | Cline | Aider |
+| Criterion | OpenCode | Pi Coding Agent | Cline | Aider |
 |---|---|---|---|---|
-| Interface | Terminal (TUI) | Terminal (TUI) | VS Code panel (GUI) | Terminal (plain CLI) |
-| Cost | Free (OpenRouter free model) | Free (OpenRouter free model) | Free (built-in free tier, no API key needed) | Free (OpenRouter free auto-router) |
-| Setup difficulty | Moderate (PATH issues, provider login) | Moderate (similar PATH/login issues) | Easiest (guided in-editor onboarding) | Moderate (pip install, PATH issues) |
-| Command approval | Runs autonomously, no per-step approval | Runs autonomously, no per-step approval | Asks approval before every command/edit | Asks to add files to chat, then edits directly |
-| Git commits | Manual (user runs `git commit`) | Manual (user runs `git commit`) | Manual by default (offered to do it, user confirmed) | **Automatic** — commits every change itself with its own message |
-| Depth of "Understand" analysis | Good — read files, gave accurate summary | Good — used shell commands, drew a flow diagram | **Best** — read Git history, flagged real style inconsistencies | Adequate — worked from lighter summaries unless files explicitly added |
-| Followed AGENTS.md rules | Yes | Yes | Yes, with extra self-verification | Yes, once AGENTS.md was manually added to chat |
-| Self-verification before finishing | Ran tests, reported results | Ran tests, re-read files before retrying | **Most rigorous** — byte-level file checks, ran function with multiple inputs | Ran tests, but relies on user remembering to verify independently |
-| Notable issue encountered | Analyzed wrong folder once (npm-global vs project); auto-found a working Python install itself | Hit a "reasoning mandatory" provider error, recovered on retry | None significant | Free model was deprecated mid-session; briefly hallucinated an unrelated task on one attempt |
+| **Access & setup** | Straightforward once PATH was fixed; free via OpenRouter, no card needed. | Similar setup to OpenCode; free via OpenRouter, needed explicit `/login`. | Easiest of the four — guided in-editor onboarding, free tier built in, no API key at all. | Needed `pip install` plus a separate installer step; free via OpenRouter's auto-router. All four were usable with zero payment. |
+| **Codebase understanding** | Located the right files, gave an accurate summary with no invented claims (verified manually against the code). | Also accurate; used shell commands to explore and produced a text-based flow diagram. | Most thorough — read Git commit history unprompted and correctly flagged a real pre-existing style inconsistency, no invented claims found. | Accurate but more surface-level by default — worked from lighter file summaries until specific files were manually added to its context. |
+| **Planning & edits** | Diffs were focused and correct; type hints and style rules were applied correctly for the `power` function. | Diffs were clean and minimal for the `modulo` function; matched existing code conventions without being told to. | Clearest, most reviewable diffs — showed exact byte-level spacing decisions and asked before adding an extra test the user hadn't explicitly requested. | Diffs were correct for `cube`, but one attempt was derailed by a hallucinated, unrelated request before a clean retry fixed it. |
+| **Terminal & VS Code** | Ran entirely in the terminal; handled PATH problems itself by locating a working Python install unprompted. | Also terminal-only; ran cleanly once logged in, recovered well from one provider error. | The only one integrated directly into VS Code as an extension; fit the editor workflow naturally with a dedicated panel. | Terminal-only; required the most manual environment setup (pip, PATH) of the four. |
+| **Tests & debugging** | Found and fixed a real bug (divide-by-zero raising the wrong exception type) unprompted during its first "Understand" pass; fix verified independently. | Ran and passed all tests after its change; no new bug needed fixing this round. | Ran tests itself and the user independently reverified; no bugs introduced by its changes. | Ran tests after its change; relied on the user to independently reverify rather than prompting for it. |
+| **Customization** | Read `AGENTS.md` automatically at startup, no configuration needed. | Also auto-read `AGENTS.md`; supports extensions/skills per its docs, not tested here. | Auto-read `AGENTS.md`; documents native MCP support, not tested here. | Required `AGENTS.md` to be manually added to its chat context before it would use it; supports plugins per docs, not tested here. |
+| **Safety & control** | Ran shell commands and edits autonomously with no per-step approval — full trust required. | Same autonomous behavior as OpenCode — no approval gate before actions. | Strongest safety posture — explicitly asked for approval before every command and file edit throughout testing. | Middle ground — asked which files it could see/edit before starting, but then edited within those files without further per-step approval. |
+| **Overall fit** | Good for fast, hands-off terminal work by a developer comfortable trusting an autonomous agent. | Similar fit to OpenCode; slightly more manual login/config overhead. | Best fit for beginners or anyone wanting to review every action before it happens — safest choice for shared/production codebases. | Good fit for developers who want Git history handled automatically, but the free-tier model instability observed here makes it less predictable for daily use. |
 
 ## Key Takeaways
 
