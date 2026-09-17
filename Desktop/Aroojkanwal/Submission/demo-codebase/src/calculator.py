@@ -1,0 +1,33 @@
+def add(a: float, b: float) -> float:
+    return a + b
+
+
+def power(a: float, b: float) -> float:
+    return a ** b
+
+
+def subtract(a: float, b: float) -> float:
+    return a - b
+
+
+def multiply(a: float, b: float) -> float:
+    return a * b
+
+
+def divide(a: float, b: float) -> float:
+    if b == 0:
+        raise ValueError("Cannot divide by zero")
+    return a / b
+
+def modulo(a: float, b: float) -> float:
+    if b == 0:
+        raise ValueError("Cannot perform modulo with zero")
+    return a % b
+
+
+def square(a: float) -> float:
+    return a * a
+
+
+def cube(a: float) -> float:
+    return a * a * a
